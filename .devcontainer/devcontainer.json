@@ -1,0 +1,33 @@
+{
+  "name": "SOS-Heatmap",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "golang.Go",                  // Hỗ trợ code Go
+        "dbaeumer.vscode-eslint",     // Bắt lỗi JS/React
+        "esbenp.prettier-vscode",     // Format code đẹp
+        "bradlc.vscode-tailwindcss",  // Gợi ý class Tailwind
+        "ms-vscode.vscode-typescript-next", // Hỗ trợ Next.js
+        "github.copilot-chat",          // GitHub Copilot Chat
+        "github.copilot"               // GitHub Copilot
+      ]
+    }
+  },
+  
+  // Mở cổng để truy cập từ trình duyệt máy thật
+  // 3000: Frontend Next.js
+  // 8080: Backend Gin
+  "forwardPorts": [3000, 8080],
+
+  // Cực quan trọng: Cài đặt thư viện cho cả 2 folder con
+  "postCreateCommand": "cd backend && go mod tidy && cd ../frontend && npm install",
+
+  "remoteUser": "vscode"
+}
