@@ -9,6 +9,21 @@ export default function Home() {
   const [showRescue, setShowRescue] = useState(false);
   const [showDisaster, setShowDisaster] = useState(false);
 
+  // SOS modal states
+  const [showSOSModal, setShowSOSModal] = useState(false);
+  const [conditions, setConditions] = useState<Record<string, boolean>>({
+    highWater: true,
+    lackFood: true,
+    injured: false,
+    noPower: false,
+    childrenOrElderly: false,
+    needMedical: false,
+  });
+  const [adults, setAdults] = useState<number>(2);
+  const [childrenCount, setChildrenCount] = useState<number>(1);
+  const [noteMessage, setNoteMessage] = useState<string>("");
+  const [recording, setRecording] = useState<boolean>(false);
+
   const provinces = useMemo(
     () => ["Quảng Bình", "Hà Nội", "TP. Hồ Chí Minh"],
     []
@@ -69,6 +84,33 @@ export default function Home() {
   
   const overview = overviewDataByProvince[province || "Quảng Bình"];
 
+  const conditionOptions = [
+    { key: "highWater", label: "Nước dâng cao" },
+    { key: "lackFood", label: "Thiếu lương thực" },
+    { key: "injured", label: "Người bị thương" },
+    { key: "noPower", label: "Mất điện/liên lạc" },
+    { key: "childrenOrElderly", label: "Có trẻ em/người già" },
+    { key: "needMedical", label: "Cần y tế gấp" },
+  ];
+
+  function toggleCondition(key: string) {
+    setConditions((s) => ({ ...s, [key]: !s[key] }));
+  }
+  function sendSOS() {
+    const payload = {
+      province: province || "Quảng Bình",
+      district,
+      conditions,
+      adults,
+      children: childrenCount,
+      noteMessage,
+      recording,
+    };
+    console.log("Gửi SOS:", payload);
+    // TODO: call API to submit payload
+    setShowSOSModal(false);
+  }
+
   return (
     <div className="flex w-full h-screen bg-amber-50">
       {/* Slide bar bên trái */}
@@ -106,6 +148,7 @@ export default function Home() {
             className={`w-full flex items-center justify-center gap-2 ${
               open ? "py-3 text-white text-sm" : "py-2"
             } rounded-md bg-red-600 hover:bg-red-700 shadow`}
+            onClick={() => setShowSOSModal(true)}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="transform -translate-y-0.5">
               <path d="M12 2v6" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
@@ -120,7 +163,7 @@ export default function Home() {
           <>
             <div className="mt-4 text-xs text-gray-500 font-medium">Chọn tỉnh / thành phố</div>
             <select
-              className="mt-2 w-full p-2 border rounded bg-white text-sm"
+              className="mt-2 w-full p-2 border rounded bg-red-50 text-sm"
               value={province}
               onChange={(e) => {
                 setProvince(e.target.value);
@@ -159,7 +202,7 @@ export default function Home() {
             </div>
 
             <div className="mt-6 flex items-center justify-between text-sm font-medium text-gray-600">
-              <div>CẬP NHẬT THỜI GIAN THỰC</div>
+              <div className="text-sm font-semibold text-gray-700">CẬP NHẬT THỜI GIAN THỰC</div>
               <button className="text-pink-600 hover:text-pink-700 text-sm flex items-center gap-2 p-1 rounded-3xl bg-red-50">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                   <path d="M21 12a9 9 0 10-3 6.6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
@@ -172,7 +215,7 @@ export default function Home() {
             <div className="mt-3 overflow-y-auto flex-1 pr-2">
               <div className="space-y-3">
                 {alerts.map((a) => (
-                  <button key={a.id} className={`border-l-2 border-red-500 rounded-md p-3 bg-white shadow-sm ${
+                  <button key={a.id} className={`border-l-4 border-red-500 rounded-md p-3 bg-white shadow-sm ${
                   a.tag == "Khẩn cấp" ? "border-red-500" : a.tag == "Cảnh báo" ? "border-yellow-500" : "border-green-500"}`}>
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1">
@@ -208,6 +251,83 @@ export default function Home() {
         </div>
         {/* Có thể thêm các overlay, nút, hoặc thông tin trên bản đồ ở đây */}
       </div>
+
+      {/* SOS Confirmation Modal */}
+      {showSOSModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+          <div className="relative z-10 w-full max-w-2xl bg-white rounded-lg shadow-lg p-6">
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="text-red-600 font-semibold">⚠️ XÁC NHẬN GỬI TÍN HIỆU KHẨN CẤP</div>
+                <div className="text-xs text-gray-500 mt-1">Hệ thống đã định vị được bạn. Hãy cung cấp thêm thông tin để đội cứu hộ chuẩn bị tốt nhất.</div>
+                <div className="text-xs text-gray-400 mt-2">Vị trí hiện tại: 17.4832°N, 106.8002°E (Xã Tân Hóa, Minh Hóa)</div>
+              </div>
+              <button aria-label="Đóng" onClick={() => setShowSOSModal(false)} className="text-gray-400 hover:text-gray-600">✕</button>
+            </div>
+
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              {conditionOptions.map((opt) => {
+                const on = conditions[opt.key];
+                return (
+                  <button
+                    key={opt.key}
+                    onClick={() => toggleCondition(opt.key)}
+                    className={`flex items-center gap-2 p-2 rounded border ${on ? "bg-blue-50 border-blue-200" : "bg-gray-50 border-gray-200"}`}
+                  >
+                    <input readOnly type="checkbox" checked={on} className="pointer-events-none" />
+                    <div className="text-sm text-left">{opt.label}</div>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="mt-4 grid grid-cols-2 gap-4">
+              <div>
+                <div className="text-xs text-gray-500">Số lượng người cần cứu</div>
+                <div className="flex items-center gap-2 mt-2">
+                  <div className="text-xs">Người lớn</div>
+                  <div className="flex items-center gap-2 ml-auto">
+                    <button onClick={() => setAdults((n) => Math.max(0, n - 1))} className="px-2 py-1 bg-gray-100 rounded">-</button>
+                    <div className="w-10 text-center">{adults}</div>
+                    <button onClick={() => setAdults((n) => n + 1)} className="px-2 py-1 bg-gray-100 rounded">+</button>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 mt-3">
+                  <div className="text-xs">Trẻ em / Người già</div>
+                  <div className="flex items-center gap-2 ml-auto">
+                    <button onClick={() => setChildrenCount((n) => Math.max(0, n - 1))} className="px-2 py-1 bg-gray-100 rounded">-</button>
+                    <div className="w-10 text-center">{childrenCount}</div>
+                    <button onClick={() => setChildrenCount((n) => n + 1)} className="px-2 py-1 bg-gray-100 rounded">+</button>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div className="text-xs text-gray-500">Ghi âm / Ghi chú (dùng khi cần)</div>
+                <div className="mt-2 flex flex-col gap-2">
+                  <textarea value={noteMessage} onChange={(e) => setNoteMessage(e.target.value)} rows={4} className="w-full p-2 border rounded text-sm" placeholder="Mô tả thêm (ví dụ: địa điểm, tình trạng...)"></textarea>
+                  <div className="flex items-center justify-between gap-2">
+                    <button
+                      onClick={() => setRecording((r) => !r)}
+                      className={`flex items-center gap-2 px-3 py-1 rounded ${recording ? "bg-red-100 text-red-600" : "bg-gray-100"}`}
+                    >
+                      <div className={`w-2 h-2 rounded-full ${recording ? "bg-red-600 animate-pulse" : "bg-gray-500"}`}></div>
+                      <div className="text-xs">{recording ? "Đang ghi âm..." : "Nhấn để bắt đầu ghi âm"}</div>
+                    </button>
+                    <div className="text-xs text-gray-400">Dự kiến: 30s</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 flex items-center justify-end gap-3">
+              <button onClick={() => setShowSOSModal(false)} className="px-4 py-2 rounded bg-white border text-sm">Hủy bỏ</button>
+              <button onClick={sendSOS} className="px-4 py-2 rounded bg-pink-600 text-white text-sm">GỬI TÍN HIỆU NGAY</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
