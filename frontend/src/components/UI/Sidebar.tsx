@@ -64,7 +64,7 @@ export default function Sidebar({ province, setProvince, district, setDistrict, 
 
   return (
     <div
-      className={`h-full bg-white border-r border-gray-200 flex flex-col p-4 transition-all duration-300 ${
+      className={`h-full bg-white border-r border-gray-200 flex flex-col p-6 transition-all duration-300 ${
         open ? "w-90" : "w-20"
       }`}
     >
