@@ -1,7 +1,8 @@
 "use client";
 import { useState, useMemo } from "react";
+import dynamic from "next/dynamic";
 import SOSModal from "../../components/UI/SOSModal";
-import Map from "../../components/Map/MapContainer";
+const Map = dynamic(() => import("../../components/Map/MapContainer"), { ssr: false });
 
 export default function Home() {
   const [open, setOpen] = useState(true);
@@ -80,7 +81,7 @@ export default function Home() {
   const overview = overviewDataByProvince[province || "Quảng Bình"];
 
   return (
-    <div className="flex w-full h-screen bg-amber-50">
+    <div className="w-full h-screen">
       {/* Slide bar bên trái */}
       <div
         className={`h-full bg-white border-r border-gray-200 flex flex-col p-4 transition-all duration-300 ${
@@ -208,7 +209,7 @@ export default function Home() {
       </div>
 
       {/* Phần bản đồ bên phải */}
-      <div className="flex-1 h-full relative">
+      <div className="flex-1 w-full h-full relative">
         {/* Sử dụng component Map thay cho hình ảnh */}
         <div className="absolute inset-0">
           <div className="w-full h-full">
@@ -254,7 +255,7 @@ function AreaOverviewCard({ province, data }: { province: string; data: { sos: n
 
   if (!open) {
     return (
-      <div className="fixed top-4 right-4 z-[1000]">
+      <div className="fixed top-4 right-4 z-1000">
         <button
           onClick={() => setOpen(true)}
           className="bg-white rounded-full shadow p-3 text-sm"
@@ -267,7 +268,7 @@ function AreaOverviewCard({ province, data }: { province: string; data: { sos: n
   }
 
   return (
-    <div className="fixed top-4 right-4 z-[1000] w-64 bg-white rounded-lg shadow-lg p-3 text-sm">
+    <div className="fixed top-4 right-4 z-1000 w-64 bg-white rounded-lg shadow-lg p-3 text-sm">
       {/* Floating overview card */}
       <div className="flex items-start justify-between">
         <div>
