@@ -1,0 +1,16 @@
+# Binaries
+/bin/
+*.exe
+*.exe~
+*.dll
+
+# Environment (Biến môi trường - Không up lên git)
+.env
+
+# Logs (Nhật ký lỗi)
+/logs/*.log
+!/logs/.gitkeep
+
+# IDE
+.vscode/
+.idea/
