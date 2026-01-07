@@ -73,10 +73,11 @@ export default function SOSModal({
   }
 
   return (
-    <div className="fixed inset-0 z-[2000] flex items-center justify-center">
+    <div className="fixed inset-0 z-2000 flex items-center justify-center">
       {/* overlay nằm dưới content nhưng vẫn trên map/card */}
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm z-[1990]" onClick={onClose} />
-      <div className="relative z-[2000] w-full max-w-2xl bg-white rounded-lg shadow-lg p-6">
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm z-1990" onClick={onClose} />
+      <div className="relative z-2000 w-full max-w-2xl bg-white rounded-lg shadow-lg p-6">
+        {/* Header modal */}
         <div className="flex items-start justify-between">
           <div>
             <div className="text-red-600 font-semibold">⚠️ XÁC NHẬN GỬI TÍN HIỆU KHẨN CẤP</div>
@@ -86,6 +87,7 @@ export default function SOSModal({
           <button aria-label="Đóng" onClick={onClose} className="text-gray-400 hover:text-gray-600">✕</button>
         </div>
 
+        {/* Danh sách điều kiện */}
         <div className="mt-4 grid grid-cols-2 gap-3">
           {conditionOptions.map((opt) => {
             const on = conditions[opt.key];
@@ -93,7 +95,7 @@ export default function SOSModal({
               <button
                 key={opt.key}
                 onClick={() => { toggleCondition(opt.key); setTouched(true); }}
-                className={`flex items-center gap-2 p-2 rounded border ${on ? "bg-blue-50 border-blue-200" : "bg-gray-50 border-gray-200"}`}
+                className={`flex items-center gap-2 p-2 rounded-xl border ${on ? "bg-blue-50 border-blue-200" : "bg-gray-50 border-gray-200"}`}
                 type="button"
               >
                 <input readOnly type="checkbox" checked={on} className="pointer-events-none" />
@@ -102,12 +104,13 @@ export default function SOSModal({
             );
           })}
         </div>
-
+        
+        {/* Số người và ghi chú */}
         <div className="mt-4 grid grid-cols-2 gap-4">
           <div>
             <div className="text-xs text-gray-500">Số lượng người cần cứu</div>
             <div className="flex items-center gap-2 mt-2">
-              <div className="text-xs">Người lớn</div>
+              <div className="text-sm">Người lớn</div>
               <div className="flex items-center gap-2 ml-auto">
                 <button onClick={() => setAdults((n) => Math.max(0, n - 1))} className="px-2 py-1 bg-gray-100 rounded">-</button>
                 <div className="w-10 text-center">{adults}</div>
@@ -115,7 +118,7 @@ export default function SOSModal({
               </div>
             </div>
             <div className="flex items-center gap-2 mt-3">
-              <div className="text-xs">Trẻ em / Người già</div>
+              <div className="text-sm">Trẻ em / Người già</div>
               <div className="flex items-center gap-2 ml-auto">
                 <button onClick={() => setChildren((n) => Math.max(0, n - 1))} className="px-2 py-1 bg-gray-100 rounded">-</button>
                 <div className="w-10 text-center">{children}</div>
@@ -150,6 +153,7 @@ export default function SOSModal({
           </div>
         )}
 
+        {/* Footer button */}
         <div className="mt-6 flex items-center justify-end gap-3">
           <button onClick={onClose} className="px-4 py-2 rounded bg-white border text-sm">Hủy bỏ</button>
           <button onClick={submit} disabled={!isValid} className={`px-4 py-2 rounded text-sm ${isValid ? "bg-pink-600 text-white" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}>

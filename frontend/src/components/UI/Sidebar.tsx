@@ -110,7 +110,7 @@ export default function Sidebar({ province, setProvince, district, setDistrict, 
         <>
           <div className="mt-4 text-xs text-gray-500 font-medium">Chọn tỉnh / thành phố</div>
           <select
-            className="mt-2 w-full p-2 border rounded bg-red-50 text-sm text-gray-300"
+            className="mt-2 w-full p-2 border rounded bg-red-50 text-sm text-gray-700"
             value={province}
             onChange={(e) => {
               setProvince(e.target.value);
@@ -127,7 +127,7 @@ export default function Sidebar({ province, setProvince, district, setDistrict, 
 
           <div className="mt-3 text-xs text-gray-500 font-medium">Chọn huyện / xã</div>
           <select
-            className="mt-2 w-full p-2 border rounded bg-red-50 text-sm text-gray-300"
+            className="mt-2 w-full p-2 border rounded bg-red-50 text-sm text-gray-700"
             value={district}
             onChange={(e) => setDistrict(e.target.value)}
             disabled={!province}

@@ -31,9 +31,21 @@ export default function Map() {
         setError(null);
       },
       (e) => {
-        setError(e.message || "Lỗi vị trí");
+        console.error("Geolocation error code:", e.code, "message:", e.message);
+        let errorMsg = "Không thể lấy vị trí hiện tại";
+
+        if (e.code === 1) {
+          errorMsg = "Vui lòng cấp quyền truy cập vị trí trong cài đặt";
+        } else if (e.code === 2) {
+          errorMsg = "Vị trí không khả dụng. Kiểm tra kết nối GPS";
+        } else if (e.code === 3) {
+          errorMsg = "Hết thời gian chờ. Vui lòng thử lại";
+        }
+
+        setError(errorMsg);
+        setPos(null);
       },
-      { enableHighAccuracy: true, maximumAge: 10000, timeout: 10000 }
+      { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
     );
     return () => navigator.geolocation.clearWatch(id);
   }, []);
