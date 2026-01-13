@@ -36,9 +36,7 @@ export default function Home() {
     try {
       console.log("Gửi SOS từ modal:", payload);
       // Validate payload
-      // if (!payload.province || !payload.district) {
-      // Test required
-      if (!payload.province) {
+      if (!payload.province || !payload.district) {
         console.error("Missing required fields:", { province: payload.province, district: payload.district });
         return;
       }
@@ -88,7 +86,7 @@ export default function Home() {
          {/* Sử dụng component Map thay cho hình ảnh */}
          <div className="absolute inset-0">
            <div className="w-full h-full">
-             <Map />
+             <Map province={province || "Quảng Bình"} />
            </div>
          </div>
        {/* AreaOverviewCard nằm ngoài container Map, fixed theo viewport để luôn nổi trên map */}
