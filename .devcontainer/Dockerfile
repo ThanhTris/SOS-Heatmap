@@ -1,5 +1,5 @@
-# Sử dụng Go 1.21 (Bản ổn định cho Backend)
-FROM mcr.microsoft.com/devcontainers/go:1-1.21-bullseye
+# Sử dụng Go 1.23 trên Debian Bookworm làm base image
+FROM mcr.microsoft.com/devcontainers/go:1-1.24-bookworm
 
 # Cài đặt Node.js 20 (LTS) - Bắt buộc cho Next.js 14+ chạy ngon
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
