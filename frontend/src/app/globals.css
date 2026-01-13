@@ -3,6 +3,13 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /*  COLORS */
+  --color-default: #2563EB;
+  --color-emergency: #f20d0d; 
+  --color-safe: #57efa8;
+  --color-warning: #FB923C; 
+  --color-flood: #52a9ff; 
+  --color-landslide: #b66511; 
 }
 
 @theme inline {
